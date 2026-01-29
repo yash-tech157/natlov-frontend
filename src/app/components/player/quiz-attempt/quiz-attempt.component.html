@@ -1,0 +1,37 @@
+<div class="container">
+  @if (!isFinished) {
+    <mat-card class="quiz-card">
+      <mat-progress-bar mode="determinate" [value]="(currentStep + 1) * 10"></mat-progress-bar>
+      <mat-card-header>
+        <mat-card-title>Question {{ currentStep + 1 }} of 10</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p class="question-text">{{ questions[currentStep].text }}</p>
+        <mat-radio-group [(ngModel)]="selectedOption" class="options-group">
+          @for (opt of questions[currentStep].options; track opt) {
+            <mat-radio-button [value]="opt" class="option-item">{{ opt }}</mat-radio-button>
+          }
+        </mat-radio-group>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <span class="spacer"></span>
+        <button mat-raised-button color="primary" (click)="next()" [disabled]="!selectedOption">
+          {{ currentStep === 9 ? 'Submit Quiz' : 'Next Question' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <mat-card class="result-card">
+      <mat-icon color="primary" class="result-icon">emoji_events</mat-icon>
+      <h1>Congratulations!</h1>
+      <p>You have completed the Java Basics quiz.</p>
+      <div class="score-box">
+        <span>Your Score:</span>
+        <h2 class="final-score">{{ totalScore }} / 10</h2>
+      </div>
+      <button mat-flat-button color="accent" routerLink="/player/quizzes">Back to Quizzes</button>
+    </mat-card>
+  }
+</div>

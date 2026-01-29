@@ -1,0 +1,67 @@
+<div class="admin-container">
+  <header class="dashboard-header">
+    <h1>GameMaster Dashboard</h1>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon> Create New Quiz
+    </button>
+  </header>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Total Quizzes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2 class="stat-number">{{ quizzes.length }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Active Players</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2 class="stat-number">124</h2>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="management-card">
+    <mat-card-header>
+      <mat-card-title>Existing Quizzes</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="quiz-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Quiz Title</th>
+            <th>Questions</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (quiz of quizzes; track quiz.id) {
+          <tr>
+            <td>#{{ quiz.id }}</td>
+            <td><strong>{{ quiz.title }}</strong></td>
+            <td>{{ quiz.questions }}</td>
+            <td class="action-buttons">
+              <button mat-icon-button color="primary" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteQuiz(quiz.id)" title="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="4" class="empty-state">No quizzes found. Create your first one!</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,7 @@
+.container { padding: 20px; }
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+.quiz-card { border-top: 4px solid #3f51b5; }

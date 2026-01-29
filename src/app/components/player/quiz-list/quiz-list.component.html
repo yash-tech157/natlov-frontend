@@ -1,0 +1,24 @@
+<div class="container">
+  <h1 class="page-title">Available Quizzes</h1>
+  
+  <div class="quiz-grid">
+    @for (quiz of quizzes; track quiz.id) {
+      <mat-card class="quiz-card">
+        <mat-card-header>
+          <mat-card-title>{{ quiz.title }}</mat-card-title>
+          <mat-card-subtitle>{{ quiz.duration }}</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <p>{{ quiz.description }}</p>
+        </mat-card-content>
+        
+        <mat-card-actions>
+          <button mat-flat-button color="primary" [routerLink]="['/player/quiz', quiz.id]">
+            START QUIZ
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+</div>

@@ -1,0 +1,27 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.question-section {
+  border-top: 1px dashed #ccc;
+  padding-top: 15px;
+  margin-top: 10px;
+
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #3f51b5;
+  }
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // Creates two columns
+  gap: 10px;
+}
+
+mat-dialog-content {
+  min-width: 450px;
+  max-height: 70vh;
+}

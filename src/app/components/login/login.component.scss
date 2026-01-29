@@ -1,0 +1,52 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+  background-color: #f8f9fa;
+}
+
+.auth-card {
+  max-width: 400px;
+  width: 90%;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.social-login {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.full-width-btn {
+  padding: 24px;
+  font-size: 1rem;
+}
+
+.divider {
+  text-align: center;
+  position: relative;
+  margin: 10px 0;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #ddd;
+  }
+  span {
+    background: white;
+    padding: 0 10px;
+    position: relative;
+    color: #888;
+    font-size: 0.8rem;
+  }
+}
