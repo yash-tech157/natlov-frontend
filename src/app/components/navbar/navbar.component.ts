@@ -7,7 +7,7 @@ import { MaterialModule } from '../../material.module';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterModule, MaterialModule],
-  templateUrl: './navbar.component.html', // Fixed: match the actual filename
+  templateUrl: './navbar.component.html', 
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {}

@@ -1,7 +1,7 @@
 <div class="admin-container">
   <header class="dashboard-header">
     <h1>GameMaster Dashboard</h1>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="openQuizEditor()">
       <mat-icon>add</mat-icon> Create New Quiz
     </button>
   </header>
@@ -21,7 +21,7 @@
         <mat-card-title>Active Players</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <h2 class="stat-number">124</h2>
+        <h2 class="stat-number">10</h2>
       </mat-card-content>
     </mat-card>
   </div>
@@ -30,6 +30,7 @@
     <mat-card-header>
       <mat-card-title>Existing Quizzes</mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
       <table class="quiz-table">
         <thead>
@@ -40,27 +41,44 @@
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody>
-          @for (quiz of quizzes; track quiz.id) {
-          <tr>
-            <td>#{{ quiz.id }}</td>
-            <td><strong>{{ quiz.title }}</strong></td>
-            <td>{{ quiz.questions }}</td>
-            <td class="action-buttons">
-              <button mat-icon-button color="primary" title="Edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" (click)="deleteQuiz(quiz.id)" title="Delete">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="4" class="empty-state">No quizzes found. Create your first one!</td>
-          </tr>
-          }
-        </tbody>
+  @for (quiz of quizzes; track quiz.id) {
+    <tr>
+      <td>#{{ quiz.id }}</td>
+
+      <td>
+        <strong>{{ quiz.title }}</strong>
+      </td>
+
+      <td>{{ quiz.questionsCount }}</td>
+
+      <td class="action-buttons">
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="openQuizEditor(quiz)"
+          matTooltip="Edit Quiz">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteQuiz(quiz.id)"
+          matTooltip="Delete Quiz">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  } @empty {
+    <tr>
+      <td colspan="4" class="empty-state">
+        No quizzes found. Create your first one!
+      </td>
+    </tr>
+  }
+</tbody>
       </table>
     </mat-card-content>
   </mat-card>
