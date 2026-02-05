@@ -44,7 +44,7 @@
       </mat-radio-group>
     </mat-card-content>
 
-    <mat-card-actions>
+    <!-- <mat-card-actions>
       <button
         mat-raised-button
         color="primary"
@@ -52,7 +52,29 @@
         [disabled]="!selectedOption">
         {{ currentStep === questions.length - 1 ? 'Submit Quiz' : 'Next Question' }}
       </button>
-    </mat-card-actions>
+    </mat-card-actions> -->
+
+    <mat-card-actions class="action-buttons">
+
+  <!-- PREVIOUS BUTTON -->
+  <button
+    mat-stroked-button
+    color="primary"
+    (click)="previous()"
+    [disabled]="currentStep === 0">
+    Previous
+  </button>
+
+  <!-- NEXT / SUBMIT BUTTON -->
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="next()"
+    [disabled]="!selectedOption">
+    {{ currentStep === questions.length - 1 ? 'Submit Quiz' : 'Next Question' }}
+  </button>
+
+</mat-card-actions>
 
   </mat-card>
 

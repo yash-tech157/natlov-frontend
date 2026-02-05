@@ -18,23 +18,22 @@ export class QuizAttemptComponent implements OnInit {
 
   quizId!: number;
 
-  // ✅ Properly typed
   questions: Question[] = [];
 
   currentStep = 0;
-  selectedOption = '';
+  selectedOption: string | null = null;
+
+  // ✅ store answers by index
   userAnswers: string[] = [];
 
   isFinished = false;
   totalScore = 0;
-
-  // ✅ Explicit loading flag (VERY IMPORTANT)
   isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService,
-     private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -50,27 +49,37 @@ export class QuizAttemptComponent implements OnInit {
       next: (data: Question[]) => {
         this.questions = data;
         this.isLoading = false;
-        console.log('Quiz Data Loaded Successfully:', data);
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading questions', err);
         this.isLoading = false;
-         this.cdr.detectChanges()
+        this.cdr.detectChanges();
       }
     });
   }
 
+  // 👉 NEXT BUTTON
   next(): void {
     if (!this.selectedOption) return;
 
-    this.userAnswers.push(this.selectedOption);
+    // ✅ save answer for current question
+    this.userAnswers[this.currentStep] = this.selectedOption;
 
     if (this.currentStep < this.questions.length - 1) {
       this.currentStep++;
-      this.selectedOption = '';
+      // ✅ restore previous answer if exists
+      this.selectedOption = this.userAnswers[this.currentStep] || null;
     } else {
       this.submitQuiz();
+    }
+  }
+
+  // 👉 PREVIOUS BUTTON
+  previous(): void {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+      this.selectedOption = this.userAnswers[this.currentStep] || null;
     }
   }
 

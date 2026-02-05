@@ -43,42 +43,35 @@
         </thead>
 
         <tbody>
-  @for (quiz of quizzes; track quiz.id) {
-    <tr>
-      <td>#{{ quiz.id }}</td>
+          @for (quiz of quizzes; track quiz.id) {
+            <tr>
+              <td>#{{ quiz.id }}</td>
+              <td><strong>{{ quiz.title }}</strong></td>
+              <td>{{ quiz.questionsCount }}</td>
+              <td class="action-buttons">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="openQuizEditor(quiz)">
+                  <mat-icon>edit</mat-icon>
+                </button>
 
-      <td>
-        <strong>{{ quiz.title }}</strong>
-      </td>
-
-      <td>{{ quiz.questionsCount }}</td>
-
-      <td class="action-buttons">
-        <button
-          mat-icon-button
-          color="primary"
-          (click)="openQuizEditor(quiz)"
-          matTooltip="Edit Quiz">
-          <mat-icon>edit</mat-icon>
-        </button>
-
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="deleteQuiz(quiz.id)"
-          matTooltip="Delete Quiz">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </tr>
-  } @empty {
-    <tr>
-      <td colspan="4" class="empty-state">
-        No quizzes found. Create your first one!
-      </td>
-    </tr>
-  }
-</tbody>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteQuiz(quiz.id!)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="empty-state">
+                No quizzes found. Create your first one!
+              </td>
+            </tr>
+          }
+        </tbody>
       </table>
     </mat-card-content>
   </mat-card>
