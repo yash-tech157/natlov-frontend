@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { QuizService } from '../../../services/quiz';
 import { Question } from '../../../services/quiz';
+import { AuthService } from '../../../services/auth.service'; // Ensure this is importedq
 
 @Component({
   selector: 'app-quiz-attempt',
@@ -38,7 +39,8 @@ timerInterval: any;
   constructor(
     private route: ActivatedRoute,
     private quizService: QuizService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -123,19 +125,37 @@ onTimeUp(): void {
     }
   }
 
- submitQuiz(): void {
+//  submitQuiz(): void {
+//   this.clearTimer(); 
+
+//   const userId = 1;
+// this.quizService.submitAnswers(this.quizId, this.userAnswers)
+
+//     .subscribe({
+//       next: (res) => {
+//         this.totalScore = res.score;
+//         this.isFinished = true;
+//       },
+//       error: (err) => console.error('Submission failed', err)
+//     });
+// }
+
+submitQuiz(): void {
   this.clearTimer(); 
 
-  const userId = 1;
-this.quizService.submitAnswers(this.quizId, this.userAnswers)
-
-    .subscribe({
-      next: (res) => {
-        this.totalScore = res.score;
-        this.isFinished = true;
-      },
-      error: (err) => console.error('Submission failed', err)
-    });
+  // Adding the type 'any' to the user parameter resolves TS7006
+  this.authService.getUserInfo().subscribe((user: any) => {
+    if (user && user.id) {
+      // Use the dynamic ID from the logged-in user
+      this.quizService.submitAnswers(this.quizId, this.userAnswers)
+        .subscribe({
+          next: (res) => {
+            this.totalScore = res.score;
+            this.isFinished = true;
+          },
+          error: (err) => console.error('Submission failed', err)
+        });
+    }
+  });
 }
-
 }

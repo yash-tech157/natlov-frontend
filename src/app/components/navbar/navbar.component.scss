@@ -1,9 +1,33 @@
+.toolbar {
+  display: flex;
+}
+
+.logo {
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .spacer {
   flex: 1 1 auto;
 }
 
-mat-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+/* Desktop default */
+.desktop-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
 }

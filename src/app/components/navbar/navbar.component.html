@@ -1,15 +1,25 @@
-<mat-toolbar color="primary">
-  <span routerLink="/" style="cursor: pointer">QuizApp</span>
+<mat-toolbar color="primary" class="toolbar">
+  <span routerLink="/" class="logo">QuizApp</span>
+
   <span class="spacer"></span>
-  
-  <button mat-button routerLink="/player/quizzes">View Quizzes</button>
 
-   <button mat-button routerLink="/admin/dashboard">Manage Quizzes</button>
+  <!-- Desktop Menu -->
+  <div class="desktop-menu">
+    <button mat-button routerLink="/player/quizzes">View Quizzes</button>
+    <button mat-button routerLink="/admin/dashboard">Manage Quizzes</button>
+    <button mat-button routerLink="/player/results/0">Leaderboard</button>
+    <button mat-button (click)="onLogout()">Logout</button>
+  </div>
 
-   <button mat-button routerLink="/player/results/0">Leaderboard</button>
-  <button mat-button (click)="onLogout()">Logout</button>
-  
-  <button mat-icon-button>
-    <mat-icon>account_circle</mat-icon>
+  <!-- Mobile Menu Icon -->
+  <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu">
+    <mat-icon>menu</mat-icon>
   </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/player/quizzes">View Quizzes</button>
+    <button mat-menu-item routerLink="/admin/dashboard">Manage Quizzes</button>
+    <button mat-menu-item routerLink="/player/results/0">Leaderboard</button>
+    <button mat-menu-item (click)="onLogout()">Logout</button>
+  </mat-menu>
 </mat-toolbar>

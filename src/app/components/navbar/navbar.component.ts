@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module'; 
+import { AuthService } from '../../services/auth.service';
 // import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,10 +18,11 @@ import { MaterialModule } from '../../material.module';
 
 export class NavbarComponent {
 
-  // constructor(public authService: AuthService) {}
+ 
+ constructor(public authService: AuthService) {}
+
   onLogout() {
-    // Redirects to Spring Security default logout URL
-    // After logout, Spring will redirect based on its configuration
+    localStorage.removeItem('token'); // Clear the JWT locally
     window.location.href = 'http://localhost:8080/logout';
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, of,tap } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,17 +10,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  getUserInfo(): Observable<any> {
-    return this.http.get('http://localhost:8080/api/auth/user', { withCredentials: true }).pipe(
+ getUserInfo(): Observable<any> {
+    return this.http.get('http://localhost:8080/api/auth/user').pipe(
       tap((user: any) => {
-        if (user) {
-          this.userRole = user.role;
-          this.userId = user.id;
-        }
+        this.userRole = user.role;
+        this.userId = user.id;
+      }),
+      catchError(() => {
+        this.userRole = null;
+        return of(null);
       })
     );
   }
 
   getRole() { return this.userRole; }
-  getUserId() { return this.userId; }
 }

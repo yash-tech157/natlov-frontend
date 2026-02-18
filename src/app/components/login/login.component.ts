@@ -16,7 +16,7 @@ export class LoginComponent {
   loginWithGoogle() {
     console.log('Logging in as:', this.selectedRole);
     // This will eventually redirect to your Spring Boot Backend OAuth2 endpoint
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+window.location.href = `http://localhost:8080/oauth2/authorization/google?role=${this.selectedRole}`;
   }
 
   loginWithGithub() {
