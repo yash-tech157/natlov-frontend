@@ -1,4 +1,4 @@
-<!-- <h2 mat-dialog-title>{{ data ? 'Edit' : 'Create New' }} Quiz</h2>
+<h2 mat-dialog-title>{{ data ? 'Edit' : 'Create New' }} Quiz</h2>
 
 <mat-dialog-content [formGroup]="quizForm">
   <mat-form-field appearance="outline" class="full-width">
@@ -16,18 +16,19 @@
 
   <hr>
   
-  <div class="section-header">
-    <h3>Questions ({{ questions.length }})</h3>
+  <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3 style="margin: 0;">Questions ({{ questions.length }})</h3>
     <button mat-flat-button color="accent" type="button" (click)="addQuestion()">
       <mat-icon>add</mat-icon> Add Question
     </button>
   </div>
 
   <div formArrayName="questionsList">
-    <div *ngFor="let q of questions.controls; let i = index" [formGroupName]="i" class="question-box">
-      <div class="question-header">
-        <h4>Question #{{ i + 1 }}</h4>
-        <button mat-icon-button color="warn" (click)="removeQuestion(i)">
+    <div *ngFor="let q of questions.controls; let i = index" [formGroupName]="i" class="question-box" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+      
+      <div class="question-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h4 style="margin: 0; color: #3f51b5;">Question #{{ i + 1 }}</h4>
+        <button mat-icon-button color="warn" type="button" (click)="removeQuestion(i)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -35,37 +36,51 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Question Text</mat-label>
         <input matInput formControlName="questionText">
+        <mat-error *ngIf="questions.at(i).get('questionText')?.hasError('required')">Required</mat-error>
       </mat-form-field>
 
       <div class="options-grid">
-        <mat-form-field appearance="outline"><mat-label>Option A</mat-label><input matInput formControlName="optionA"></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Option B</mat-label><input matInput formControlName="optionB"></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Option C</mat-label><input matInput formControlName="optionC"></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Option D</mat-label><input matInput formControlName="optionD"></mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Option A</mat-label>
+          <input matInput formControlName="optionA">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Option B</mat-label>
+          <input matInput formControlName="optionB">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Option C</mat-label>
+          <input matInput formControlName="optionC">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Option D</mat-label>
+          <input matInput formControlName="optionD">
+        </mat-form-field>
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Correct Answer (A/B/C/D)</mat-label>
-        <input matInput formControlName="correctAnswer" placeholder="e.g. A">
+        <input matInput formControlName="correctAnswer" placeholder="e.g. A" style="text-transform: uppercase;">
         <mat-error *ngIf="questions.at(i).get('correctAnswer')?.hasError('pattern')">
           Must be exactly A, B, C, or D
         </mat-error>
       </mat-form-field>
-      <hr class="question-divider">
+      
     </div>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+  
   <button mat-raised-button color="primary" (click)="onSave()" 
           [disabled]="quizForm.invalid || questions.length === 0">
     Save Entire Quiz
   </button>
-</mat-dialog-actions> -->
+</mat-dialog-actions>
 
 
-<h2 mat-dialog-title>{{ data ? 'Edit' : 'Create New' }} Quiz</h2>
+<!-- <h2 mat-dialog-title>{{ data ? 'Edit' : 'Create New' }} Quiz</h2>
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Quiz Title</mat-label>
@@ -118,4 +133,4 @@
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!quizTitle || questionsList.length === 0">
     Save Entire Quiz
   </button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->

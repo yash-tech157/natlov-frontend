@@ -7,6 +7,7 @@ import { MaterialModule } from '../../../material.module';
 import { QuizService } from '../../../services/quiz';
 import { Question } from '../../../services/quiz';
 import { AuthService } from '../../../services/auth.service'; // Ensure this is importedq
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-quiz-attempt',
@@ -40,7 +41,8 @@ timerInterval: any;
     private route: ActivatedRoute,
     private quizService: QuizService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -143,17 +145,23 @@ onTimeUp(): void {
 submitQuiz(): void {
   this.clearTimer(); 
 
-  // Adding the type 'any' to the user parameter resolves TS7006
   this.authService.getUserInfo().subscribe((user: any) => {
     if (user && user.id) {
-      // Use the dynamic ID from the logged-in user
       this.quizService.submitAnswers(this.quizId, this.userAnswers)
         .subscribe({
           next: (res) => {
             this.totalScore = res.score;
             this.isFinished = true;
+            this.snackBar.open('Quiz submitted successfully!', 'Close', { duration: 3000 });
           },
-          error: (err) => console.error('Submission failed', err)
+          error: (err) => {
+            console.error('Submission failed', err);
+            // Show alert to user
+            this.snackBar.open('Failed to submit quiz. Please try again.', 'Close', { 
+              duration: 4000, 
+              panelClass: ['error-snackbar'] 
+            });
+          }
         });
     }
   });

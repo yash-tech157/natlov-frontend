@@ -6,24 +6,26 @@ import { DashboardComponent as AdminDashboard } from './components/admin/dashboa
 import { authGuard } from './guards/auth-guard';
 import { LoginSuccessComponent } from './components/login-success/login-success.component';
 import { Results } from './components/player/results/results';
-import { CanActivateFn, Router } from '@angular/router';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  // { path: 'login-success', component: LoginSuccessComponent },
+  { path: 'login-success', component: LoginSuccessComponent },
+  
+  // leaderboard route
+  { 
+    path: 'leaderboard', 
+    component: Results, 
+    canActivate: [authGuard] 
+  },
+  
   { path: 'player/results/:id', component: Results },
-  { path: 'player/quizzes', component: QuizListComponent , canActivate: [authGuard]},
+  { path: 'player/quizzes', component: QuizListComponent, canActivate: [authGuard] },
   { path: 'player/quiz/:id', component: QuizAttemptComponent },
-  {
-  path: 'login-success',
-  component: LoginSuccessComponent
-}
-,
-{ 
+  { 
     path: 'admin/dashboard', 
     component: AdminDashboard, 
-    canActivate: [authGuard] ,
+    canActivate: [authGuard],
     data: { role: 'ROLE_GAMEMASTER' }
-    // Apply the guard here
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

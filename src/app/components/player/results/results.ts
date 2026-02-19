@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { QuizService } from '../../../services/quiz';
@@ -13,45 +13,49 @@ import { LeaderboardWebSocketService } from '../../../services/leaderboard-webso
   templateUrl: './results.html',
   styleUrl: './results.scss'
 })
-export class Results implements OnInit {
+export class Results implements OnInit, OnDestroy {
   resultData: any;
   leaderboard: any[] = [];
-    private wsSubscription!: Subscription;
+  private wsSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute, 
     private quizService: QuizService,
-        private websocketService: LeaderboardWebSocketService
+    private websocketService: LeaderboardWebSocketService
   ) {}
 
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
 
- ngOnInit(): void {
+    // ✅ CHANGED: Only fetch individual result if ID exists
+    if (idParam) {
+      const id = Number(idParam);
+      this.quizService.getResultById(id).subscribe({
+        next: (data: any) => {
+          this.resultData = data;
+        },
+        error: (err: any) => console.error('Error fetching individual result', err)
+      });
+    }
 
-  const idParam = this.route.snapshot.paramMap.get('id');
+    // ✅ MOVED OUTSIDE: These should run for BOTH the leaderboard route and results route
+    this.fetchLeaderboard();
+    this.setupWebsocket();
+  }
 
-  if (idParam) {
-    const id = Number(idParam);
-
-    // 1️⃣ Fetch individual result
-    this.quizService.getResultById(id).subscribe({
-      next: (data: any) => {
-        this.resultData = data;
-      },
-      error: (err: any) => console.error('Error fetching individual result', err)
-    });
-
-    // 2️⃣ Fetch initial leaderboard (VERY IMPORTANT)
+  // Helper to fetch initial leaderboard
+  private fetchLeaderboard(): void {
     this.quizService.getLeaderboard().subscribe({
       next: (data: any[]) => {
         this.leaderboard = data;
       },
       error: (err: any) => console.error('Error fetching leaderboard', err)
     });
+  }
 
-    // 3️⃣ Connect to WebSocket
+  // Helper to start real-time updates
+  private setupWebsocket(): void {
     this.websocketService.connect();
-
-    // 4️⃣ Listen for live updates
     this.wsSubscription = this.websocketService.leaderboard$
       .subscribe(data => {
         if (data && data.length > 0) {
@@ -59,8 +63,6 @@ export class Results implements OnInit {
         }
       });
   }
-}
-
 
   ngOnDestroy(): void {
     if (this.wsSubscription) {
@@ -69,4 +71,3 @@ export class Results implements OnInit {
     this.websocketService.disconnect();
   }
 }
-

@@ -87,64 +87,91 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'; // Ensure these are imported
-import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-quiz-editor',
   standalone: true,
-  imports: [CommonModule, MaterialModule, FormsModule],
+  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
   templateUrl: './quiz-editor.component.html',
   styleUrl: './quiz-editor.component.scss',
 })
 export class QuizEditorComponent implements OnInit {
-  quizTitle: string = '';
-  quizDescription: string = '';
-  questionCount: number = 0;
+  quizForm!: FormGroup;
 
-  questionsList: any[] = [];
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<QuizEditorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
-  newQuestion = {
-    questionText: '',
-    optionA: '',
-    optionB: '',
-    optionC: '',
-    optionD: '',
-    correctAnswer: ''
-  };
-
-  addQuestionToList() {
-    if (this.newQuestion.questionText && this.newQuestion.correctAnswer) {
-      this.questionsList.push({ ...this.newQuestion });
-      // Reset the form for the next question
-      this.newQuestion = { questionText: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: '' };
+  ngOnInit() {
+    this.initForm();
+    if (this.data) {
+      this.patchExistingData();
     }
   }
 
-  removeQuestion(index: number) {
-    this.questionsList.splice(index, 1);
+  // Initialize the main form group
+  private initForm() {
+    this.quizForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      description: ['', [Validators.required]],
+      questionsList: this.fb.array([]) // FormArray handles the dynamic list of questions
+    });
   }
-  constructor(
-    public dialogRef: MatDialogRef<QuizEditorComponent>, // Fixes Property 'dialogRef' error
-    @Inject(MAT_DIALOG_DATA) public data: any           // Fixes Property 'data' error
-  ) {}
 
-ngOnInit() {
-  if (this.data) {
-    this.quizTitle = this.data.title;
-    this.quizDescription = this.data.description || '';
-    // Load existing questions so they aren't lost on save
-    this.questionsList = this.data.questionsList || []; 
-    this.questionCount = this.questionsList.length; 
+  // Getter for easy access to the questions array in the HTML template
+  get questions() {
+    return this.quizForm.get('questionsList') as FormArray;
   }
-}
-onSave() {
-  const quizData = {
-    title: this.quizTitle,
-    description: this.quizDescription,
-    questionCount: this.questionsList.length, 
-    questionsList: this.questionsList        
-  };
-  this.dialogRef.close(quizData);
-}
+
+  // Creates a new FormGroup for a single question with validation
+  createQuestionGroup(qData?: any): FormGroup {
+    return this.fb.group({
+      questionText: [qData?.questionText || '', Validators.required],
+      optionA: [qData?.optionA || '', Validators.required],
+      optionB: [qData?.optionB || '', Validators.required],
+      optionC: [qData?.optionC || '', Validators.required],
+      optionD: [qData?.optionD || '', Validators.required],
+      // Regex ensures they only type A, B, C, or D (case-insensitive)
+      correctAnswer: [qData?.correctAnswer || '', [Validators.required, Validators.pattern(/^[A-D]$/i)]] 
+    });
+  }
+
+  // Adds an empty question form to the FormArray
+  addQuestion() {
+    this.questions.push(this.createQuestionGroup());
+  }
+
+  // Removes a question from the FormArray
+  removeQuestion(index: number) {
+    this.questions.removeAt(index);
+  }
+
+  // Fills the form if we are editing an existing quiz
+  private patchExistingData() {
+    this.quizForm.patchValue({
+      title: this.data.title,
+      description: this.data.description
+    });
+    
+    if (this.data.questionsList) {
+      this.data.questionsList.forEach((q: any) => {
+        this.questions.push(this.createQuestionGroup(q));
+      });
+    }
+  }
+
+  // Submits the data back to the DashboardComponent
+  onSave() {
+    if (this.quizForm.valid) {
+      const finalData = {
+        ...this.quizForm.value,
+        questionCount: this.questions.length // Ensure the backend gets the correct count
+      };
+      this.dialogRef.close(finalData);
+    }
+  }
 }

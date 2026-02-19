@@ -71,4 +71,8 @@ export class QuizService {
   getLeaderboard(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/results/leaderboard`);
   }
+
+  getPlayerCount(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/admin/stats/players/count`);
+  }
 }

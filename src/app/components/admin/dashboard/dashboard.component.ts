@@ -20,8 +20,19 @@ export class DashboardComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  playerCount: number = 0;
   ngOnInit(): void {
   this.loadQuizzes(); // This calls the QuizService
+  this.loadStats();
+}
+
+loadStats(): void {
+  this.quizService.getPlayerCount().subscribe({
+    next: (count) => {
+      this.playerCount = count;
+    },
+    error: (err) => console.error('Error loading player count', err)
+  });
 }
 
 loadQuizzes(): void {
